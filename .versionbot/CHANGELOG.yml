@@ -1,4 +1,19 @@
 - commits:
+    - subject: Improve error message for issues to access balena settings
+      hash: 92593d2d60de90332dc36e254ab68592ff400b9b
+      body: |
+        Update balena-settings-storage from 6.0.1 to 7.0.0
+        Update balena-errors from 4.4.1 to 4.7.1
+      footer:
+        Resolves: '#1667'
+        resolves: '#1667'
+        Change-type: minor
+        change-type: minor
+      author: josecoelho
+      nested: []
+  version: 12.27.0
+  date: 2020-11-04T00:40:51.632Z
+- commits:
     - subject: 'devices: Fix "TypeError: Cannot read property ''slug'' of undefined"'
       hash: 9d177609f5adfa357363ba5356f51027a388f635
       body: ''
