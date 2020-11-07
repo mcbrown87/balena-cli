@@ -209,6 +209,16 @@ export class LivepushManager {
 		});
 	}
 
+	public close() {
+		for (const container of Object.values(this.containers)) {
+			container.monitor.close().catch((err) => {
+				if (process.env.DEBUG) {
+					this.logger.logDebug(`chokidar.close() ${err.message}`);
+				}
+			});
+		}
+	}
+
 	public static preprocessDockerfile(content: string): string {
 		return new Dockerfile(content).generateLiveDockerfile();
 	}
