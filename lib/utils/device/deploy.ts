@@ -262,7 +262,7 @@ export async function deployToDevice(opts: DeviceDeployOptions): Promise<void> {
 		// Only show logs if we're not detaching
 		if (!opts.detached) {
 			const logStream = await api.getLogStream();
-			globalLogger.logInfo('Streaming device logs...');
+			globalLogger.logInfo('(not) Streaming device logs... (live)');
 			promises.push(
 				displayDeviceLogs(logStream, globalLogger, opts.system, opts.services),
 			);
@@ -285,7 +285,7 @@ export async function deployToDevice(opts: DeviceDeployOptions): Promise<void> {
 		console.log();
 		// Now all we need to do is stream back the logs
 		const logStream = await api.getLogStream();
-		globalLogger.logInfo('Streaming device logs...');
+		globalLogger.logInfo('Streaming device logs... (--nolive)');
 		globalLogger.outputDeferredMessages();
 		await displayDeviceLogs(
 			logStream,

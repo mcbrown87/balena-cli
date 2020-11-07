@@ -310,6 +310,7 @@ export default class PushCmd extends Command {
 
 				// TODO: Support passing a different port
 				try {
+					console.error(`push.ts calling deployToDevice`);
 					await deviceDeploy.deployToDevice({
 						source,
 						deviceHost: device,
@@ -327,7 +328,9 @@ export default class PushCmd extends Command {
 						env: options.env || [],
 						convertEol,
 					});
+					console.error(`push.ts post calling deployToDevice`);
 				} catch (e) {
+					console.error(`push.ts entering catch block`);
 					const { BuildError } = await import('../utils/device/errors');
 					if (instanceOf(e, BuildError)) {
 						throw new ExpectedError(e.toString());
@@ -335,6 +338,7 @@ export default class PushCmd extends Command {
 						throw e;
 					}
 				}
+				console.error(`push.ts post try/catch`);
 				break;
 
 			default:
@@ -342,6 +346,7 @@ export default class PushCmd extends Command {
 					Build target not recognized. Please provide either an application name or
 					device IP address.`);
 		}
+		console.error(`push.ts exiting run()`);
 	}
 
 	async getBuildTarget(appOrDevice: string): Promise<BuildTarget | null> {

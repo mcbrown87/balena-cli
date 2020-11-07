@@ -144,6 +144,9 @@ export class LivepushManager {
 					stageImages: this.imageIds[serviceName],
 					docker: this.docker,
 				});
+
+				console.error(`live.ts post Livepush.init`);
+
 				const buildVars = buildTask.buildMetadata.getBuildVarsForService(
 					buildTask.serviceName,
 				);
