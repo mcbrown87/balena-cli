@@ -1,4 +1,17 @@
 - commits:
+    - subject: 'Livepush: Ignore paths set in .dockerignore files'
+      hash: f8bb9392598bf606b72cea54a2a2066bc9caf0bc
+      body: ''
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Josh Bowling <josh@balena.io>
+        signed-off-by: Josh Bowling <josh@balena.io>
+      author: Josh Bowling
+      nested: []
+  version: 12.27.3
+  date: 2020-11-10T01:15:31.199Z
+- commits:
     - subject: Modify `os download` help to mention dev images
       hash: 7da9a800ccd2af0fbb051f1d95707e5d8623e227
       body: ''
