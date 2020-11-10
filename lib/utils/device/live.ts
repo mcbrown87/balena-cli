@@ -3,6 +3,7 @@ import type * as Dockerode from 'dockerode';
 import Livepush, { ContainerNotRunningError } from 'livepush';
 import * as _ from 'lodash';
 import * as path from 'path';
+import { promises as fs } from 'fs';
 import type { Composition } from 'resin-compose-parse';
 import type { BuildTask } from 'resin-multibuild';
 
@@ -20,6 +21,8 @@ import {
 import { BuildError } from './errors';
 import { getServiceColourFn } from './logs';
 import { delay } from '../helpers';
+import { getServiceDirsFromComposition } from '../compose_ts';
+import { filterFilesWithDockerignore } from '../ignore';
 
 // How often do we want to check the device state
 // engine has settled (delay in ms)
@@ -162,11 +165,43 @@ export class LivepushManager {
 					eventQueue.push(changedPath);
 					this.getDebouncedEventHandler(serviceName)();
 				};
+
+				// Get list of paths for file watcher to ignore using dockerignores
+				const ignored = ['.git'];
+				const serviceDirs = this.deployOpts.multiDockerignore
+					? await getServiceDirsFromComposition(
+							this.deployOpts.source,
+							this.composition,
+					  )
+					: {};
+				const { dockerignoreFiles } = await filterFilesWithDockerignore(
+					this.deployOpts.source,
+					serviceDirs,
+				);
+				let dockerignoreContent = '';
+				let ignorePath = '';
+				for (const file of dockerignoreFiles) {
+					try {
+						dockerignoreContent = await fs.readFile(file.filePath, 'utf8');
+					} catch (err) {
+						this.logger.logError(
+							`Error reading .dockerignore file "${file.filePath}":\n${err}`,
+						);
+						throw err;
+					}
+					for (const line of dockerignoreContent.split(/\r?\n/)) {
+						ignorePath = line.trim();
+						if (!_.isEmpty(ignorePath)) {
+							ignored.push(path.join(path.dirname(file.relPath), ignorePath));
+						}
+					}
+				}
+
 				// TODO: Memoize this for containers which share a context
 				const monitor = chokidar.watch('.', {
 					cwd: context,
 					ignoreInitial: true,
-					ignored: '.git',
+					ignored,
 				});
 				monitor.on('add', (changedPath: string) =>
 					addEvent(this.updateEventsWaiting[serviceName], changedPath),
